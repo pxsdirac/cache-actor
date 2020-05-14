@@ -95,15 +95,15 @@ trait UserOps{
   }
 
   class CachedUserOpsImpl(override val context:ActorContext[_]) extends UserOps with CacheFutureApi[String,User,Map[String,User]]{
-    protected def actorName:String = "user-cache-actor"
-    protected def refreshPolicy:RefreshPolicy[Map[String,User]] = ReloadAndUpdate(
+    private def actorName:String = "user-cache-actor"
+    private def refreshPolicy:RefreshPolicy[Map[String,User]] = ReloadAndUpdate(
       interval = 10.minutes,
       loader= () => loadAllUsersFromDB().map(users => users.map(user => user.id -> user).toMap),
       updater = (oldCache,newCache) => newCache,
       initStashCapacity = 1000
     )
-    protected def missedPolicy:MissedPolicy[String,User,Map[String,User]] = JustReturnNone[String,User,Map[String,User]]()
-    protected def getFromLocal(c: Map[String,User],k: String):Option[User] = c.get(k)
+    private def missedPolicy:MissedPolicy[String,User,Map[String,User]] = JustReturnNone[String,User,Map[String,User]]()
+    private def getFromLocal(c: Map[String,User],k: String):Option[User] = c.get(k)
 
     override def getUser(id: String)(implicit deadline: Deadline): Future[Option[User]] = get(id)
   }
