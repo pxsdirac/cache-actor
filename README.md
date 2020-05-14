@@ -57,6 +57,7 @@ def loadUserFromDB(id:String):Future[Option[User]] = ???
 我们可以是使用空数据启动actor，之后每次先检查缓存，如果未命中，再去数据库中加载，加载完之后更新缓存。
 
 refreshPolicy: NoRefresh
+
 missedPolicy: FetchMissedAndUpdate
 
 注意事项：
@@ -66,6 +67,7 @@ missedPolicy: FetchMissedAndUpdate
 当用户数据较少，且变更不是很频繁时，可以使用此种策略。
 
 refreshPolicy： ReloadAndUpdate
+
 missedPolicy： JustReturnNone
 
 ```scala
